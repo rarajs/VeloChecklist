@@ -1,0 +1,543 @@
+<!doctype html>
+<html lang="lv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Velo checklists">
+  <meta name="theme-color" content="#0f172a">
+  <title>Velo sacensību checklists</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #fef3c7;
+      --yellowText: #92400e;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: 17px;
+      line-height: 1.35;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .page {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 14px 12px 90px;
+    }
+
+    .top {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: -14px -12px 12px;
+      padding: calc(12px + env(safe-area-inset-top)) 12px 12px;
+      background: rgba(244, 246, 248, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.05);
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 24px;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .sub {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .bar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .progressText {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .progressOuter {
+      width: 100%;
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progressInner {
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      border-radius: 999px;
+      transition: width .15s ease;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 10px;
+      font-size: 16px;
+      font-weight: 800;
+      min-height: 48px;
+      color: #fff;
+      background: var(--blue);
+      touch-action: manipulation;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: var(--text);
+    }
+
+    button.danger {
+      background: var(--red);
+      grid-column: span 2;
+    }
+
+    .section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      margin: 12px 0;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0,0,0,.04);
+    }
+
+    .sectionHead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 14px;
+      background: #f9fafb;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sectionTitle {
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .sectionCount {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: center;
+      min-height: 58px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .item:last-child {
+      border-bottom: 0;
+    }
+
+    .item input {
+      width: 28px;
+      height: 28px;
+      margin: 0;
+      accent-color: var(--green);
+    }
+
+    .item label {
+      min-width: 0;
+      font-size: 17px;
+      font-weight: 650;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .item.done label {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .tag {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 6px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .02em;
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .tag.optional {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .tip {
+      margin: 12px 0;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: var(--yellow);
+      color: var(--yellowText);
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .notes {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.04);
+    }
+
+    .notes h2 {
+      margin: 0 0 10px;
+      font-size: 19px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 120px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      font: inherit;
+      resize: vertical;
+      background: #fff;
+    }
+
+    .footerNote {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 14px 2px 0;
+    }
+
+    @media (max-width: 380px) {
+      body { font-size: 16px; }
+      h1 { font-size: 22px; }
+      .buttons { grid-template-columns: 1fr; }
+      button.danger { grid-column: auto; }
+    }
+
+    @media print {
+      .top button, .notes, .tip, .footerNote { display: none; }
+      .top { position: static; }
+      body { background: #fff; }
+      .section, .hero { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top">
+      <div class="hero">
+        <h1>🚴 Velo sacensību checklists</h1>
+        <p class="sub">Atver iPhone pirms sacensībām un saķeksē. Ķekši saglabājas šajā pašā telefonā/pārlūkā.</p>
+
+        <div class="bar">
+          <div class="progressOuter" aria-label="Progress">
+            <div id="progressInner" class="progressInner"></div>
+          </div>
+          <div id="progressText" class="progressText">0/0</div>
+        </div>
+
+        <div class="buttons">
+          <button id="newCheck">Jauna pārbaude</button>
+          <button id="requiredOnly" class="secondary">Atzīmēt obligāto</button>
+          <button id="clearAll" class="danger">Noņemt visus ķekšus</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      iPhone lietošanai: atver šo failu Safari, piespied Share pogu un izvēlies “Add to Home Screen”. Tad tas būs kā maza aplikācija uz ekrāna.
+    </div>
+
+    <main id="list"></main>
+
+    <section class="notes">
+      <h2>📝 Piezīmes konkrētajām sacensībām</h2>
+      <textarea id="notes" placeholder="Piemēram: starts 10:00, numurs jāizņem līdz 9:15, trase slapja, jāņem dubļu riepas..."></textarea>
+    </section>
+
+    <p class="footerNote">Versija: iPhone / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
+  </div>
+
+<script>
+(function () {
+  const checklist = [
+    {
+      title: "Apģērbs",
+      items: [
+        ["Velo forma / krekls", true],
+        ["Velo šorti vai bikses ar polsteri", true],
+        ["Velo zeķes", true],
+        ["Velo apavi", true],
+        ["Ķivere", true],
+        ["Cimdi", true],
+        ["Brilles", true],
+        ["Lietus jaka / vēja veste", false],
+        ["Siltā apakškārta", false],
+        ["Pārģērbšanās drēbes pēc finiša", true],
+        ["Dvielis", false],
+        ["Maisiņš slapjām vai netīrām drēbēm", false]
+      ]
+    },
+    {
+      title: "Paika un dzērieni",
+      items: [
+        ["Ūdens pudeles", true],
+        ["Izotoniskais dzēriens vai pulveris", false],
+        ["Gēli", false],
+        ["Batoniņi / banāni", true],
+        ["Paika pirms starta", true],
+        ["Paika pēc finiša", false],
+        ["Magnijs / sāls tabletes", false],
+        ["Kafija vai enerģijas dzēriens, ja lieto", false]
+      ]
+    },
+    {
+      title: "Velo",
+      items: [
+        ["Velosipēds", true],
+        ["Pārslēdzēja baterija / akumulators uzlādēts", true],
+        ["Rezerves baterija pārslēdzējam, ja ir elektroniskais pārslēdzējs", false],
+        ["Velo dators uzlādēts", true],
+        ["Velo datora stiprinājums pārbaudīts", true],
+        ["Pulsa josta / sensori, ja lieto", false],
+        ["Riepu spiediens pārbaudīts", true],
+        ["Bremzes pārbaudītas", true],
+        ["Ātrumi pārbaudīti", true],
+        ["Ķēde saeļļota", true],
+        ["Pudeles turētāji pieskrūvēti", true],
+        ["Starta numurs / čips piestiprināts", true],
+        ["Lampiņa, ja vajadzīga", false]
+      ]
+    },
+    {
+      title: "Instrumenti un rezerves daļas",
+      items: [
+        ["Rezerves kamera", true],
+        ["Montāžas lāpstiņas", true],
+        ["Pumpis vai CO₂ baloniņš", true],
+        ["Multitūlis", true],
+        ["Ātrais ķēdes savienojums", false],
+        ["Tubeless dakts / remonta komplekts", false],
+        ["Rezerves ventiļa serde", false],
+        ["Savilcēji", false],
+        ["Izolācijas lenta", false],
+        ["Maza lupatiņa", false]
+      ]
+    },
+    {
+      title: "Dokumenti un organizācija",
+      items: [
+        ["Telefons", true],
+        ["Maks / bankas karte / skaidra nauda", true],
+        ["Personu apliecinošs dokuments", true],
+        ["Licence, ja vajadzīga", false],
+        ["Reģistrācijas apstiprinājums / QR kods", true],
+        ["Auto atslēgas", true],
+        ["Navigācija līdz starta vietai pārbaudīta", true],
+        ["Starta laiks un numura izņemšanas laiks pārbaudīts", true]
+      ]
+    },
+    {
+      title: "Pirms izbraukšanas no mājām",
+      items: [
+        ["Velo ielikts auto vai uz turētāja", true],
+        ["Priekšējais rats, ja ņemts nost", true],
+        ["Ass / ekscentrs paņemts", true],
+        ["Velo apavi nav palikuši mājās", true],
+        ["Ķivere nav palikusi mājās", true],
+        ["Pudeles piepildītas", true],
+        ["Velo dators ir uz velo vai somā", true],
+        ["Pārslēdzēja baterija nav palikusi lādētājā", true],
+        ["Telefons uzlādēts", true],
+        ["Laika prognoze pārbaudīta", true]
+      ]
+    }
+  ];
+
+  const stateKey = "veloChecklistIphoneStateV2";
+  const notesKey = "veloChecklistIphoneNotesV2";
+
+  const list = document.getElementById("list");
+  const progressText = document.getElementById("progressText");
+  const progressInner = document.getElementById("progressInner");
+  const notes = document.getElementById("notes");
+
+  function loadState() {
+    try {
+      return JSON.parse(localStorage.getItem(stateKey)) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveState() {
+    const state = {};
+    document.querySelectorAll("input[type='checkbox']").forEach(cb => {
+      state[cb.id] = cb.checked;
+    });
+    localStorage.setItem(stateKey, JSON.stringify(state));
+    localStorage.setItem(notesKey, notes.value || "");
+    updateProgress();
+  }
+
+  function idFor(sectionIndex, itemIndex) {
+    return "check_" + sectionIndex + "_" + itemIndex;
+  }
+
+  function render() {
+    const state = loadState();
+    list.innerHTML = "";
+
+    checklist.forEach((section, sectionIndex) => {
+      const sectionEl = document.createElement("section");
+      sectionEl.className = "section";
+
+      const requiredCount = section.items.filter(item => item[1]).length;
+
+      const head = document.createElement("div");
+      head.className = "sectionHead";
+      head.innerHTML = "<div class='sectionTitle'>" + section.title + "</div><div class='sectionCount'>" + requiredCount + " obligāti</div>";
+      sectionEl.appendChild(head);
+
+      section.items.forEach((item, itemIndex) => {
+        const id = idFor(sectionIndex, itemIndex);
+        const row = document.createElement("div");
+        row.className = "item";
+        if (state[id]) row.classList.add("done");
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.id = id;
+        cb.checked = !!state[id];
+
+        const label = document.createElement("label");
+        label.setAttribute("for", id);
+        label.innerHTML = item[0] + " <span class='tag " + (item[1] ? "" : "optional") + "'>" + (item[1] ? "obligāti" : "pēc vajadzības") + "</span>";
+
+        cb.addEventListener("change", function () {
+          row.classList.toggle("done", cb.checked);
+          saveState();
+        });
+
+        row.addEventListener("click", function (event) {
+          if (event.target.tagName.toLowerCase() !== "input" && event.target.tagName.toLowerCase() !== "label") {
+            cb.checked = !cb.checked;
+            cb.dispatchEvent(new Event("change"));
+          }
+        });
+
+        sectionEl.appendChild(row);
+        row.appendChild(cb);
+        row.appendChild(label);
+      });
+
+      list.appendChild(sectionEl);
+    });
+
+    notes.value = localStorage.getItem(notesKey) || "";
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const boxes = Array.from(document.querySelectorAll("input[type='checkbox']"));
+    const done = boxes.filter(cb => cb.checked).length;
+    const total = boxes.length;
+    const pct = total ? Math.round(done / total * 100) : 0;
+    progressText.textContent = done + "/" + total;
+    progressInner.style.width = pct + "%";
+  }
+
+  function clearAll() {
+    document.querySelectorAll("input[type='checkbox']").forEach(cb => {
+      cb.checked = false;
+      cb.closest(".item").classList.remove("done");
+    });
+    saveState();
+  }
+
+  document.getElementById("newCheck").addEventListener("click", function () {
+    clearAll();
+    notes.value = "";
+    localStorage.removeItem(notesKey);
+    saveState();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  document.getElementById("clearAll").addEventListener("click", function () {
+    clearAll();
+  });
+
+  document.getElementById("requiredOnly").addEventListener("click", function () {
+    checklist.forEach((section, sectionIndex) => {
+      section.items.forEach((item, itemIndex) => {
+        const cb = document.getElementById(idFor(sectionIndex, itemIndex));
+        cb.checked = !!item[1];
+        cb.closest(".item").classList.toggle("done", cb.checked);
+      });
+    });
+    saveState();
+  });
+
+  notes.addEventListener("input", saveState);
+
+  render();
+})();
+</script>
+</body>
+</html>
