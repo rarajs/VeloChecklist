@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Velo checklists">
+  <meta name="apple-mobile-web-app-title" content="VeloChecklist">
   <meta name="theme-color" content="#0f172a">
   <title>Velo sacensību checklists</title>
   <style>
@@ -17,8 +17,11 @@
       --blue: #2563eb;
       --green: #16a34a;
       --red: #dc2626;
+      --orange: #f97316;
       --yellow: #fef3c7;
       --yellowText: #92400e;
+      --softBlue: #dbeafe;
+      --softGray: #f3f4f6;
     }
 
     * { box-sizing: border-box; }
@@ -38,9 +41,9 @@
     }
 
     .page {
-      max-width: 760px;
+      max-width: 780px;
       margin: 0 auto;
-      padding: 14px 12px 90px;
+      padding: 14px 12px 100px;
     }
 
     .top {
@@ -84,8 +87,10 @@
     }
 
     .progressText {
-      font-weight: 800;
+      font-weight: 900;
       font-size: 15px;
+      min-width: 58px;
+      text-align: right;
     }
 
     .progressOuter {
@@ -116,9 +121,9 @@
       -webkit-appearance: none;
       border: 0;
       border-radius: 14px;
-      padding: 13px 10px;
+      padding: 12px 10px;
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 850;
       min-height: 48px;
       color: #fff;
       background: var(--blue);
@@ -130,9 +135,42 @@
       color: var(--text);
     }
 
+    button.green {
+      background: var(--green);
+    }
+
+    button.orange {
+      background: var(--orange);
+    }
+
     button.danger {
       background: var(--red);
+    }
+
+    button.full {
       grid-column: span 2;
+    }
+
+    button.small {
+      min-height: 38px;
+      padding: 8px 10px;
+      font-size: 14px;
+      border-radius: 11px;
+    }
+
+    .editNotice {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--yellow);
+      color: var(--yellowText);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    body.editing .editNotice {
+      display: block;
     }
 
     .section {
@@ -157,12 +195,14 @@
     .sectionTitle {
       font-size: 19px;
       font-weight: 900;
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .sectionCount {
       font-size: 13px;
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 850;
       white-space: nowrap;
     }
 
@@ -182,7 +222,7 @@
       border-bottom: 0;
     }
 
-    .item input {
+    .item input[type="checkbox"] {
       width: 28px;
       height: 28px;
       margin: 0;
@@ -196,6 +236,7 @@
       cursor: pointer;
       user-select: none;
       -webkit-user-select: none;
+      overflow-wrap: anywhere;
     }
 
     .item.done label {
@@ -213,13 +254,104 @@
       font-weight: 900;
       text-transform: uppercase;
       letter-spacing: .02em;
-      background: #dbeafe;
+      background: var(--softBlue);
       color: #1e40af;
+      white-space: nowrap;
     }
 
     .tag.optional {
-      background: #f3f4f6;
+      background: var(--softGray);
       color: #6b7280;
+    }
+
+    .editBlock {
+      display: none;
+      padding: 12px 14px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfdff;
+    }
+
+    body.editing .editBlock {
+      display: block;
+    }
+
+    body.editing .normalOnly {
+      display: none !important;
+    }
+
+    .fieldLabel {
+      display: block;
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      font: inherit;
+      background: #fff;
+      color: var(--text);
+      min-height: 46px;
+    }
+
+    .editActions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .editItem {
+      display: grid;
+      gap: 8px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .editItem:last-child {
+      border-bottom: 0;
+    }
+
+    .editItemTop {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .editItemActions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .reqToggle {
+      background: #e5e7eb;
+      color: var(--text);
+    }
+
+    .reqToggle.required {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .addSectionBox {
+      background: var(--card);
+      border: 1px dashed #94a3b8;
+      border-radius: 18px;
+      padding: 14px;
+      margin: 12px 0;
+      display: none;
+    }
+
+    body.editing .addSectionBox {
+      display: block;
     }
 
     .tip {
@@ -263,15 +395,20 @@
       margin: 14px 2px 0;
     }
 
+    .hidden {
+      display: none !important;
+    }
+
     @media (max-width: 380px) {
       body { font-size: 16px; }
       h1 { font-size: 22px; }
       .buttons { grid-template-columns: 1fr; }
-      button.danger { grid-column: auto; }
+      button.full { grid-column: auto; }
+      .editActions, .editItemActions { grid-template-columns: 1fr; }
     }
 
     @media print {
-      .top button, .notes, .tip, .footerNote { display: none; }
+      .top button, .notes, .tip, .footerNote, .editBlock, .addSectionBox { display: none; }
       .top { position: static; }
       body { background: #fff; }
       .section, .hero { box-shadow: none; }
@@ -283,9 +420,9 @@
     <div class="top">
       <div class="hero">
         <h1>🚴 Velo sacensību checklists</h1>
-        <p class="sub">Atver iPhone pirms sacensībām un saķeksē. Ķekši saglabājas šajā pašā telefonā/pārlūkā.</p>
+        <p class="sub" id="subtitle">Atver iPhone pirms sacensībām un saķeksē. Saturs saglabājas šajā telefonā/pārlūkā.</p>
 
-        <div class="bar">
+        <div class="bar normalOnly">
           <div class="progressOuter" aria-label="Progress">
             <div id="progressInner" class="progressInner"></div>
           </div>
@@ -293,248 +430,416 @@
         </div>
 
         <div class="buttons">
-          <button id="newCheck">Jauna pārbaude</button>
-          <button id="requiredOnly" class="secondary">Atzīmēt obligāto</button>
-          <button id="clearAll" class="danger">Noņemt visus ķekšus</button>
+          <button id="newCheck" class="normalOnly">Jauna pārbaude</button>
+          <button id="requiredOnly" class="secondary normalOnly">Atzīmēt obligāto</button>
+          <button id="editMode" class="orange full">Rediģēt saturu</button>
+          <button id="clearAll" class="danger full normalOnly">Noņemt visus ķekšus</button>
+          <button id="resetDefault" class="danger full hidden">Atjaunot sākuma sarakstu</button>
+        </div>
+
+        <div class="editNotice">
+          Rediģēšanas režīms: vari mainīt kategoriju nosaukumus, punktu tekstu, dzēst, pievienot un pārslēgt “obligāti / pēc vajadzības”.
         </div>
       </div>
     </div>
 
-    <div class="tip">
-      iPhone lietošanai: atver šo failu Safari, piespied Share pogu un izvēlies “Add to Home Screen”. Tad tas būs kā maza aplikācija uz ekrāna.
-    </div>
-
     <main id="list"></main>
+
+    <section class="addSectionBox" id="addSectionBox">
+      <label class="fieldLabel" for="newSectionTitle">Jauna kategorija</label>
+      <input class="input" id="newSectionTitle" placeholder="Piemēram: Auto / Somā / Pēc finiša">
+      <div class="editActions">
+        <button id="addSection" class="green">Pievienot kategoriju</button>
+        <button id="cancelSection" class="secondary">Notīrīt</button>
+      </div>
+    </section>
 
     <section class="notes">
       <h2>📝 Piezīmes konkrētajām sacensībām</h2>
       <textarea id="notes" placeholder="Piemēram: starts 10:00, numurs jāizņem līdz 9:15, trase slapja, jāņem dubļu riepas..."></textarea>
     </section>
 
-    <p class="footerNote">Versija: iPhone / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
+    <p class="footerNote">Versija: editable / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
   </div>
 
 <script>
 (function () {
-  const checklist = [
+  const DEFAULT_DATA = [
     {
+      id: makeId(),
       title: "Apģērbs",
       items: [
-        ["Velo forma / krekls", true],
-        ["Velo šorti vai bikses ar polsteri", true],
-        ["Velo zeķes", true],
-        ["Velo apavi", true],
-        ["Ķivere", true],
-        ["Cimdi", true],
-        ["Brilles", true],
-        ["Lietus jaka / vēja veste", false],
-        ["Siltā apakškārta", false],
-        ["Pārģērbšanās drēbes pēc finiša", true],
-        ["Dvielis", false],
-        ["Maisiņš slapjām vai netīrām drēbēm", false]
+        item("Velo forma / krekls", true),
+        item("Velo šorti vai bikses ar polsteri", true),
+        item("Velo zeķes", true),
+        item("Velo apavi", true),
+        item("Ķivere", true),
+        item("Cimdi", true),
+        item("Brilles", true),
+        item("Lietus jaka / vēja veste", false),
+        item("Siltā apakškārta", false),
+        item("Pārģērbšanās drēbes pēc finiša", true),
+        item("Dvielis", false),
+        item("Maisiņš slapjām vai netīrām drēbēm", false)
       ]
     },
     {
+      id: makeId(),
       title: "Paika un dzērieni",
       items: [
-        ["Ūdens pudeles", true],
-        ["Izotoniskais dzēriens vai pulveris", false],
-        ["Gēli", false],
-        ["Batoniņi / banāni", true],
-        ["Paika pirms starta", true],
-        ["Paika pēc finiša", false],
-        ["Magnijs / sāls tabletes", false],
-        ["Kafija vai enerģijas dzēriens, ja lieto", false]
+        item("Ūdens pudeles", true),
+        item("Izotoniskais dzēriens vai pulveris", false),
+        item("Gēli", false),
+        item("Batoniņi / banāni", true),
+        item("Paika pirms starta", true),
+        item("Paika pēc finiša", false),
+        item("Magnijs / sāls tabletes", false),
+        item("Kafija vai enerģijas dzēriens, ja lieto", false)
       ]
     },
     {
+      id: makeId(),
       title: "Velo",
       items: [
-        ["Velosipēds", true],
-        ["Pārslēdzēja baterija / akumulators uzlādēts", true],
-        ["Rezerves baterija pārslēdzējam, ja ir elektroniskais pārslēdzējs", false],
-        ["Velo dators uzlādēts", true],
-        ["Velo datora stiprinājums pārbaudīts", true],
-        ["Pulsa josta / sensori, ja lieto", false],
-        ["Riepu spiediens pārbaudīts", true],
-        ["Bremzes pārbaudītas", true],
-        ["Ātrumi pārbaudīti", true],
-        ["Ķēde saeļļota", true],
-        ["Pudeles turētāji pieskrūvēti", true],
-        ["Starta numurs / čips piestiprināts", true],
-        ["Lampiņa, ja vajadzīga", false]
+        item("Velosipēds", true),
+        item("Pārslēdzēja baterija / akumulators uzlādēts", true),
+        item("Rezerves baterija pārslēdzējam, ja ir elektroniskais pārslēdzējs", false),
+        item("Velo dators uzlādēts", true),
+        item("Velo datora stiprinājums pārbaudīts", true),
+        item("Pulsa josta / sensori, ja lieto", false),
+        item("Riepu spiediens pārbaudīts", true),
+        item("Bremzes pārbaudītas", true),
+        item("Ātrumi pārbaudīti", true),
+        item("Ķēde saeļļota", true),
+        item("Pudeles turētāji pieskrūvēti", true),
+        item("Starta numurs / čips piestiprināts", true),
+        item("Lampiņa, ja vajadzīga", false)
       ]
     },
     {
+      id: makeId(),
       title: "Instrumenti un rezerves daļas",
       items: [
-        ["Rezerves kamera", true],
-        ["Montāžas lāpstiņas", true],
-        ["Pumpis vai CO₂ baloniņš", true],
-        ["Multitūlis", true],
-        ["Ātrais ķēdes savienojums", false],
-        ["Tubeless dakts / remonta komplekts", false],
-        ["Rezerves ventiļa serde", false],
-        ["Savilcēji", false],
-        ["Izolācijas lenta", false],
-        ["Maza lupatiņa", false]
+        item("Rezerves kamera", true),
+        item("Montāžas lāpstiņas", true),
+        item("Pumpis vai CO₂ baloniņš", true),
+        item("Multitūlis", true),
+        item("Ātrais ķēdes savienojums", false),
+        item("Tubeless dakts / remonta komplekts", false),
+        item("Rezerves ventiļa serde", false),
+        item("Savilcēji", false),
+        item("Izolācijas lenta", false),
+        item("Maza lupatiņa", false)
       ]
     },
     {
+      id: makeId(),
       title: "Dokumenti un organizācija",
       items: [
-        ["Telefons", true],
-        ["Maks / bankas karte / skaidra nauda", true],
-        ["Personu apliecinošs dokuments", true],
-        ["Licence, ja vajadzīga", false],
-        ["Reģistrācijas apstiprinājums / QR kods", true],
-        ["Auto atslēgas", true],
-        ["Navigācija līdz starta vietai pārbaudīta", true],
-        ["Starta laiks un numura izņemšanas laiks pārbaudīts", true]
+        item("Telefons", true),
+        item("Maks / bankas karte / skaidra nauda", true),
+        item("Personu apliecinošs dokuments", true),
+        item("Licence, ja vajadzīga", false),
+        item("Reģistrācijas apstiprinājums / QR kods", true),
+        item("Auto atslēgas", true),
+        item("Navigācija līdz starta vietai pārbaudīta", true),
+        item("Starta laiks un numura izņemšanas laiks pārbaudīts", true)
       ]
     },
     {
+      id: makeId(),
       title: "Pirms izbraukšanas no mājām",
       items: [
-        ["Velo ielikts auto vai uz turētāja", true],
-        ["Priekšējais rats, ja ņemts nost", true],
-        ["Ass / ekscentrs paņemts", true],
-        ["Velo apavi nav palikuši mājās", true],
-        ["Ķivere nav palikusi mājās", true],
-        ["Pudeles piepildītas", true],
-        ["Velo dators ir uz velo vai somā", true],
-        ["Pārslēdzēja baterija nav palikusi lādētājā", true],
-        ["Telefons uzlādēts", true],
-        ["Laika prognoze pārbaudīta", true]
+        item("Velo ielikts auto vai uz turētāja", true),
+        item("Priekšējais rats, ja ņemts nost", true),
+        item("Ass / ekscentrs paņemts", true),
+        item("Velo apavi nav palikuši mājās", true),
+        item("Ķivere nav palikusi mājās", true),
+        item("Pudeles piepildītas", true),
+        item("Velo dators ir uz velo vai somā", true),
+        item("Pārslēdzēja baterija nav palikusi lādētājā", true),
+        item("Telefons uzlādēts", true),
+        item("Laika prognoze pārbaudīta", true)
       ]
     }
   ];
 
-  const stateKey = "veloChecklistIphoneStateV2";
-  const notesKey = "veloChecklistIphoneNotesV2";
+  const dataKey = "veloChecklistEditableDataV3";
+  const notesKey = "veloChecklistEditableNotesV3";
+  const editKey = "veloChecklistEditableModeV3";
+
+  let data = loadData();
+  let editing = localStorage.getItem(editKey) === "1";
 
   const list = document.getElementById("list");
   const progressText = document.getElementById("progressText");
   const progressInner = document.getElementById("progressInner");
   const notes = document.getElementById("notes");
+  const editBtn = document.getElementById("editMode");
+  const resetDefaultBtn = document.getElementById("resetDefault");
 
-  function loadState() {
+  function makeId() {
+    return "id_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+  }
+
+  function item(text, required) {
+    return {
+      id: makeId(),
+      text: text,
+      required: !!required,
+      checked: false
+    };
+  }
+
+  function cloneDefaultData() {
+    return JSON.parse(JSON.stringify(DEFAULT_DATA));
+  }
+
+  function loadData() {
     try {
-      return JSON.parse(localStorage.getItem(stateKey)) || {};
+      const raw = localStorage.getItem(dataKey);
+      if (!raw) return cloneDefaultData();
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed) || parsed.length === 0) return cloneDefaultData();
+      parsed.forEach(section => {
+        if (!section.id) section.id = makeId();
+        if (!Array.isArray(section.items)) section.items = [];
+        section.items.forEach(it => {
+          if (!it.id) it.id = makeId();
+          it.text = String(it.text || "");
+          it.required = !!it.required;
+          it.checked = !!it.checked;
+        });
+      });
+      return parsed;
     } catch (e) {
-      return {};
+      return cloneDefaultData();
     }
   }
 
-  function saveState() {
-    const state = {};
-    document.querySelectorAll("input[type='checkbox']").forEach(cb => {
-      state[cb.id] = cb.checked;
-    });
-    localStorage.setItem(stateKey, JSON.stringify(state));
+  function saveData() {
+    localStorage.setItem(dataKey, JSON.stringify(data));
     localStorage.setItem(notesKey, notes.value || "");
+    localStorage.setItem(editKey, editing ? "1" : "0");
     updateProgress();
   }
 
-  function idFor(sectionIndex, itemIndex) {
-    return "check_" + sectionIndex + "_" + itemIndex;
+  function escapeHtml(text) {
+    return String(text)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function setEditing(value) {
+    editing = !!value;
+    document.body.classList.toggle("editing", editing);
+    editBtn.textContent = editing ? "Pabeigt rediģēšanu" : "Rediģēt saturu";
+    editBtn.classList.toggle("green", editing);
+    editBtn.classList.toggle("orange", !editing);
+    resetDefaultBtn.classList.toggle("hidden", !editing);
+    render();
+    saveData();
   }
 
   function render() {
-    const state = loadState();
+    document.body.classList.toggle("editing", editing);
+    editBtn.textContent = editing ? "Pabeigt rediģēšanu" : "Rediģēt saturu";
+    editBtn.classList.toggle("green", editing);
+    editBtn.classList.toggle("orange", !editing);
+    resetDefaultBtn.classList.toggle("hidden", !editing);
+
     list.innerHTML = "";
 
-    checklist.forEach((section, sectionIndex) => {
+    data.forEach((section, sectionIndex) => {
       const sectionEl = document.createElement("section");
       sectionEl.className = "section";
 
-      const requiredCount = section.items.filter(item => item[1]).length;
+      const requiredCount = section.items.filter(it => it.required).length;
+      const checkedCount = section.items.filter(it => it.checked).length;
 
       const head = document.createElement("div");
       head.className = "sectionHead";
-      head.innerHTML = "<div class='sectionTitle'>" + section.title + "</div><div class='sectionCount'>" + requiredCount + " obligāti</div>";
+      head.innerHTML =
+        "<div class='sectionTitle'>" + escapeHtml(section.title || "Bez nosaukuma") + "</div>" +
+        "<div class='sectionCount'>" + (editing ? (section.items.length + " punkti") : (checkedCount + "/" + section.items.length)) + "</div>";
       sectionEl.appendChild(head);
 
-      section.items.forEach((item, itemIndex) => {
-        const id = idFor(sectionIndex, itemIndex);
-        const row = document.createElement("div");
-        row.className = "item";
-        if (state[id]) row.classList.add("done");
+      const editBlock = document.createElement("div");
+      editBlock.className = "editBlock";
+      editBlock.innerHTML =
+        "<label class='fieldLabel'>Kategorijas nosaukums</label>" +
+        "<input class='input sectionTitleInput' value='" + escapeHtml(section.title || "") + "' placeholder='Kategorijas nosaukums'>" +
+        "<div class='editActions'>" +
+          "<button class='green small addItemBtn'>+ Pievienot punktu</button>" +
+          "<button class='danger small deleteSectionBtn'>Dzēst kategoriju</button>" +
+        "</div>";
+      sectionEl.appendChild(editBlock);
 
-        const cb = document.createElement("input");
-        cb.type = "checkbox";
-        cb.id = id;
-        cb.checked = !!state[id];
+      editBlock.querySelector(".sectionTitleInput").addEventListener("input", function (e) {
+        section.title = e.target.value;
+        saveData();
+      });
 
-        const label = document.createElement("label");
-        label.setAttribute("for", id);
-        label.innerHTML = item[0] + " <span class='tag " + (item[1] ? "" : "optional") + "'>" + (item[1] ? "obligāti" : "pēc vajadzības") + "</span>";
+      editBlock.querySelector(".addItemBtn").addEventListener("click", function () {
+        section.items.push(item("Jauns punkts", true));
+        saveData();
+        render();
+      });
 
-        cb.addEventListener("change", function () {
-          row.classList.toggle("done", cb.checked);
-          saveState();
-        });
+      editBlock.querySelector(".deleteSectionBtn").addEventListener("click", function () {
+        if (confirm("Dzēst visu kategoriju “" + (section.title || "Bez nosaukuma") + "”?")) {
+          data.splice(sectionIndex, 1);
+          saveData();
+          render();
+        }
+      });
 
-        row.addEventListener("click", function (event) {
-          if (event.target.tagName.toLowerCase() !== "input" && event.target.tagName.toLowerCase() !== "label") {
-            cb.checked = !cb.checked;
-            cb.dispatchEvent(new Event("change"));
-          }
-        });
+      section.items.forEach((it, itemIndex) => {
+        if (!editing) {
+          const row = document.createElement("div");
+          row.className = "item";
+          if (it.checked) row.classList.add("done");
 
-        sectionEl.appendChild(row);
-        row.appendChild(cb);
-        row.appendChild(label);
+          const cb = document.createElement("input");
+          cb.type = "checkbox";
+          cb.id = it.id;
+          cb.checked = !!it.checked;
+
+          const label = document.createElement("label");
+          label.setAttribute("for", it.id);
+          label.innerHTML =
+            escapeHtml(it.text || "Bez teksta") +
+            " <span class='tag " + (it.required ? "" : "optional") + "'>" +
+            (it.required ? "obligāti" : "pēc vajadzības") +
+            "</span>";
+
+          cb.addEventListener("change", function () {
+            it.checked = cb.checked;
+            row.classList.toggle("done", it.checked);
+            saveData();
+          });
+
+          row.addEventListener("click", function (event) {
+            const tag = event.target.tagName.toLowerCase();
+            if (tag !== "input" && tag !== "label" && tag !== "span") {
+              cb.checked = !cb.checked;
+              cb.dispatchEvent(new Event("change"));
+            }
+          });
+
+          row.appendChild(cb);
+          row.appendChild(label);
+          sectionEl.appendChild(row);
+        } else {
+          const editItem = document.createElement("div");
+          editItem.className = "editItem";
+          editItem.innerHTML =
+            "<div class='editItemTop'>" +
+              "<label class='fieldLabel'>Punkta teksts</label>" +
+              "<input class='input itemTextInput' value='" + escapeHtml(it.text || "") + "' placeholder='Piemēram: Ķivere'>" +
+            "</div>" +
+            "<div class='editItemActions'>" +
+              "<button class='small reqToggle " + (it.required ? "required" : "") + "'>" + (it.required ? "Obligāti" : "Pēc vajadzības") + "</button>" +
+              "<button class='small danger deleteItemBtn'>Dzēst</button>" +
+            "</div>";
+          sectionEl.appendChild(editItem);
+
+          editItem.querySelector(".itemTextInput").addEventListener("input", function (e) {
+            it.text = e.target.value;
+            saveData();
+          });
+
+          editItem.querySelector(".reqToggle").addEventListener("click", function (e) {
+            it.required = !it.required;
+            e.target.textContent = it.required ? "Obligāti" : "Pēc vajadzības";
+            e.target.classList.toggle("required", it.required);
+            saveData();
+            render();
+          });
+
+          editItem.querySelector(".deleteItemBtn").addEventListener("click", function () {
+            section.items.splice(itemIndex, 1);
+            saveData();
+            render();
+          });
+        }
       });
 
       list.appendChild(sectionEl);
     });
 
-    notes.value = localStorage.getItem(notesKey) || "";
     updateProgress();
   }
 
   function updateProgress() {
-    const boxes = Array.from(document.querySelectorAll("input[type='checkbox']"));
-    const done = boxes.filter(cb => cb.checked).length;
-    const total = boxes.length;
+    const all = data.flatMap(section => section.items);
+    const done = all.filter(it => it.checked).length;
+    const total = all.length;
     const pct = total ? Math.round(done / total * 100) : 0;
     progressText.textContent = done + "/" + total;
     progressInner.style.width = pct + "%";
   }
 
-  function clearAll() {
-    document.querySelectorAll("input[type='checkbox']").forEach(cb => {
-      cb.checked = false;
-      cb.closest(".item").classList.remove("done");
+  function clearAllChecks() {
+    data.forEach(section => {
+      section.items.forEach(it => it.checked = false);
     });
-    saveState();
+    saveData();
+    render();
   }
 
+  function checkRequiredOnly() {
+    data.forEach(section => {
+      section.items.forEach(it => it.checked = !!it.required);
+    });
+    saveData();
+    render();
+  }
+
+  notes.value = localStorage.getItem(notesKey) || "";
+  notes.addEventListener("input", saveData);
+
   document.getElementById("newCheck").addEventListener("click", function () {
-    clearAll();
+    clearAllChecks();
     notes.value = "";
     localStorage.removeItem(notesKey);
-    saveState();
+    saveData();
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  document.getElementById("clearAll").addEventListener("click", function () {
-    clearAll();
+  document.getElementById("clearAll").addEventListener("click", clearAllChecks);
+  document.getElementById("requiredOnly").addEventListener("click", checkRequiredOnly);
+  editBtn.addEventListener("click", function () { setEditing(!editing); });
+
+  document.getElementById("addSection").addEventListener("click", function () {
+    const input = document.getElementById("newSectionTitle");
+    const title = input.value.trim();
+    if (!title) {
+      alert("Ieraksti kategorijas nosaukumu.");
+      return;
+    }
+    data.push({ id: makeId(), title: title, items: [] });
+    input.value = "";
+    saveData();
+    render();
   });
 
-  document.getElementById("requiredOnly").addEventListener("click", function () {
-    checklist.forEach((section, sectionIndex) => {
-      section.items.forEach((item, itemIndex) => {
-        const cb = document.getElementById(idFor(sectionIndex, itemIndex));
-        cb.checked = !!item[1];
-        cb.closest(".item").classList.toggle("done", cb.checked);
-      });
-    });
-    saveState();
+  document.getElementById("cancelSection").addEventListener("click", function () {
+    document.getElementById("newSectionTitle").value = "";
   });
 
-  notes.addEventListener("input", saveState);
+  resetDefaultBtn.addEventListener("click", function () {
+    if (confirm("Atjaunot sākuma sarakstu? Tavas izmaiņas tiks dzēstas.")) {
+      data = cloneDefaultData();
+      notes.value = "";
+      localStorage.removeItem(notesKey);
+      saveData();
+      render();
+    }
+  });
 
   render();
 })();
