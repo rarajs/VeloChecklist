@@ -17,7 +17,6 @@
       --blue: #2563eb;
       --green: #16a34a;
       --red: #dc2626;
-      --orange: #f97316;
       --yellow: #fef3c7;
       --yellowText: #92400e;
       --softBlue: #dbeafe;
@@ -26,9 +25,7 @@
 
     * { box-sizing: border-box; }
 
-    html {
-      -webkit-text-size-adjust: 100%;
-    }
+    html { -webkit-text-size-adjust: 100%; }
 
     body {
       margin: 0;
@@ -65,11 +62,37 @@
       box-shadow: 0 4px 16px rgba(0,0,0,.05);
     }
 
+    .heroHead {
+      display: grid;
+      grid-template-columns: 1fr 48px;
+      gap: 10px;
+      align-items: start;
+    }
+
     h1 {
       margin: 0 0 6px;
       font-size: 24px;
       line-height: 1.15;
       letter-spacing: -0.02em;
+    }
+
+    .settingsBtn {
+      width: 48px;
+      height: 48px;
+      min-height: 48px;
+      padding: 0;
+      border-radius: 14px;
+      background: #eef2f7;
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      line-height: 1;
+    }
+
+    .settingsBtn.active {
+      background: var(--green);
+      color: #ffffff;
     }
 
     .sub {
@@ -135,21 +158,9 @@
       color: var(--text);
     }
 
-    button.green {
-      background: var(--green);
-    }
-
-    button.orange {
-      background: var(--orange);
-    }
-
-    button.danger {
-      background: var(--red);
-    }
-
-    button.full {
-      grid-column: span 2;
-    }
+    button.green { background: var(--green); }
+    button.danger { background: var(--red); }
+    button.full { grid-column: span 2; }
 
     button.small {
       min-height: 38px;
@@ -169,9 +180,8 @@
       font-weight: 700;
     }
 
-    body.editing .editNotice {
-      display: block;
-    }
+    body.editing .editNotice { display: block; }
+    body.editing .normalOnly { display: none !important; }
 
     .section {
       background: var(--card);
@@ -183,10 +193,10 @@
     }
 
     .sectionHead {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: grid;
+      grid-template-columns: 1fr auto;
       gap: 10px;
+      align-items: center;
       padding: 15px 14px;
       background: #f9fafb;
       border-bottom: 1px solid var(--line);
@@ -218,9 +228,7 @@
       background: #fff;
     }
 
-    .item:last-child {
-      border-bottom: 0;
-    }
+    .item:last-child { border-bottom: 0; }
 
     .item input[type="checkbox"] {
       width: 28px;
@@ -271,13 +279,7 @@
       background: #fbfdff;
     }
 
-    body.editing .editBlock {
-      display: block;
-    }
-
-    body.editing .normalOnly {
-      display: none !important;
-    }
+    body.editing .editBlock { display: block; }
 
     .fieldLabel {
       display: block;
@@ -315,10 +317,6 @@
       background: #fff;
     }
 
-    .editItem:last-child {
-      border-bottom: 0;
-    }
-
     .editItemTop {
       display: grid;
       grid-template-columns: 1fr;
@@ -341,6 +339,24 @@
       color: #fff;
     }
 
+    .addItemBottom {
+      display: none;
+      padding: 12px 14px 14px;
+      background: #fbfdff;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    body.editing .addItemBottom {
+      display: block;
+    }
+
+    .addPointBtn {
+      width: 100%;
+      background: #eef2f7;
+      color: var(--text);
+      border: 1px dashed #94a3b8;
+    }
+
     .addSectionBox {
       background: var(--card);
       border: 1px dashed #94a3b8;
@@ -350,19 +366,7 @@
       display: none;
     }
 
-    body.editing .addSectionBox {
-      display: block;
-    }
-
-    .tip {
-      margin: 12px 0;
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: var(--yellow);
-      color: var(--yellowText);
-      font-size: 15px;
-      font-weight: 650;
-    }
+    body.editing .addSectionBox { display: block; }
 
     .notes {
       background: var(--card);
@@ -395,9 +399,7 @@
       margin: 14px 2px 0;
     }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
     @media (max-width: 380px) {
       body { font-size: 16px; }
@@ -406,21 +408,19 @@
       button.full { grid-column: auto; }
       .editActions, .editItemActions { grid-template-columns: 1fr; }
     }
-
-    @media print {
-      .top button, .notes, .tip, .footerNote, .editBlock, .addSectionBox { display: none; }
-      .top { position: static; }
-      body { background: #fff; }
-      .section, .hero { box-shadow: none; }
-    }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="top">
       <div class="hero">
-        <h1>🚴 Velo sacensību checklists</h1>
-        <p class="sub" id="subtitle">Atver iPhone pirms sacensībām un saķeksē. Saturs saglabājas šajā telefonā/pārlūkā.</p>
+        <div class="heroHead">
+          <div>
+            <h1>🚴 Velo sacensību checklists</h1>
+            <p class="sub">Atver iPhone pirms sacensībām un saķeksē. Saturs saglabājas šajā telefonā/pārlūkā.</p>
+          </div>
+          <button id="settingsBtn" class="settingsBtn" aria-label="Iestatījumi">☰</button>
+        </div>
 
         <div class="bar normalOnly">
           <div class="progressOuter" aria-label="Progress">
@@ -429,16 +429,19 @@
           <div id="progressText" class="progressText">0/0</div>
         </div>
 
-        <div class="buttons">
-          <button id="newCheck" class="normalOnly">Jauna pārbaude</button>
-          <button id="requiredOnly" class="secondary normalOnly">Atzīmēt obligāto</button>
-          <button id="editMode" class="orange full">Rediģēt saturu</button>
-          <button id="clearAll" class="danger full normalOnly">Noņemt visus ķekšus</button>
-          <button id="resetDefault" class="danger full hidden">Atjaunot sākuma sarakstu</button>
+        <div class="buttons normalOnly">
+          <button id="newCheck">Jauna pārbaude</button>
+          <button id="requiredOnly" class="secondary">Atzīmēt obligāto</button>
+          <button id="clearAll" class="danger full">Noņemt visus ķekšus</button>
         </div>
 
         <div class="editNotice">
-          Rediģēšanas režīms: vari mainīt kategoriju nosaukumus, punktu tekstu, dzēst, pievienot un pārslēgt “obligāti / pēc vajadzības”.
+          Rediģēšanas režīms. Lai pabeigtu, vēlreiz nospied pogu ☰ augšā pa labi.
+        </div>
+
+        <div class="buttons hidden" id="editTopButtons">
+          <button id="shareChecklist" class="secondary full">Dalīties ar sarakstu</button>
+          <button id="resetDefault" class="danger full">Atjaunot sākuma sarakstu</button>
         </div>
       </div>
     </div>
@@ -449,7 +452,7 @@
       <label class="fieldLabel" for="newSectionTitle">Jauna kategorija</label>
       <input class="input" id="newSectionTitle" placeholder="Piemēram: Auto / Somā / Pēc finiša">
       <div class="editActions">
-        <button id="addSection" class="green">Pievienot kategoriju</button>
+        <button id="addSection" class="green">+ Pievienot kategoriju</button>
         <button id="cancelSection" class="secondary">Notīrīt</button>
       </div>
     </section>
@@ -459,11 +462,19 @@
       <textarea id="notes" placeholder="Piemēram: starts 10:00, numurs jāizņem līdz 9:15, trase slapja, jāņem dubļu riepas..."></textarea>
     </section>
 
-    <p class="footerNote">Versija: editable / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
+    <p class="footerNote">Versija: settings-edit / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
   </div>
 
 <script>
 (function () {
+  function makeId() {
+    return "id_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
+  }
+
+  function item(text, required) {
+    return { id: makeId(), text: text, required: !!required, checked: false };
+  }
+
   const DEFAULT_DATA = [
     {
       id: makeId(),
@@ -564,9 +575,9 @@
     }
   ];
 
-  const dataKey = "veloChecklistEditableDataV3";
-  const notesKey = "veloChecklistEditableNotesV3";
-  const editKey = "veloChecklistEditableModeV3";
+  const dataKey = "veloChecklistEditableDataV4";
+  const notesKey = "veloChecklistEditableNotesV4";
+  const editKey = "veloChecklistEditableModeV4";
 
   let data = loadData();
   let editing = localStorage.getItem(editKey) === "1";
@@ -575,21 +586,8 @@
   const progressText = document.getElementById("progressText");
   const progressInner = document.getElementById("progressInner");
   const notes = document.getElementById("notes");
-  const editBtn = document.getElementById("editMode");
-  const resetDefaultBtn = document.getElementById("resetDefault");
-
-  function makeId() {
-    return "id_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 8);
-  }
-
-  function item(text, required) {
-    return {
-      id: makeId(),
-      text: text,
-      required: !!required,
-      checked: false
-    };
-  }
+  const settingsBtn = document.getElementById("settingsBtn");
+  const editTopButtons = document.getElementById("editTopButtons");
 
   function cloneDefaultData() {
     return JSON.parse(JSON.stringify(DEFAULT_DATA));
@@ -636,20 +634,18 @@
   function setEditing(value) {
     editing = !!value;
     document.body.classList.toggle("editing", editing);
-    editBtn.textContent = editing ? "Pabeigt rediģēšanu" : "Rediģēt saturu";
-    editBtn.classList.toggle("green", editing);
-    editBtn.classList.toggle("orange", !editing);
-    resetDefaultBtn.classList.toggle("hidden", !editing);
+    settingsBtn.classList.toggle("active", editing);
+    settingsBtn.textContent = editing ? "✓" : "☰";
+    editTopButtons.classList.toggle("hidden", !editing);
     render();
     saveData();
   }
 
   function render() {
     document.body.classList.toggle("editing", editing);
-    editBtn.textContent = editing ? "Pabeigt rediģēšanu" : "Rediģēt saturu";
-    editBtn.classList.toggle("green", editing);
-    editBtn.classList.toggle("orange", !editing);
-    resetDefaultBtn.classList.toggle("hidden", !editing);
+    settingsBtn.classList.toggle("active", editing);
+    settingsBtn.textContent = editing ? "✓" : "☰";
+    editTopButtons.classList.toggle("hidden", !editing);
 
     list.innerHTML = "";
 
@@ -657,7 +653,6 @@
       const sectionEl = document.createElement("section");
       sectionEl.className = "section";
 
-      const requiredCount = section.items.filter(it => it.required).length;
       const checkedCount = section.items.filter(it => it.checked).length;
 
       const head = document.createElement("div");
@@ -673,7 +668,6 @@
         "<label class='fieldLabel'>Kategorijas nosaukums</label>" +
         "<input class='input sectionTitleInput' value='" + escapeHtml(section.title || "") + "' placeholder='Kategorijas nosaukums'>" +
         "<div class='editActions'>" +
-          "<button class='green small addItemBtn'>+ Pievienot punktu</button>" +
           "<button class='danger small deleteSectionBtn'>Dzēst kategoriju</button>" +
         "</div>";
       sectionEl.appendChild(editBlock);
@@ -681,12 +675,6 @@
       editBlock.querySelector(".sectionTitleInput").addEventListener("input", function (e) {
         section.title = e.target.value;
         saveData();
-      });
-
-      editBlock.querySelector(".addItemBtn").addEventListener("click", function () {
-        section.items.push(item("Jauns punkts", true));
-        saveData();
-        render();
       });
 
       editBlock.querySelector(".deleteSectionBtn").addEventListener("click", function () {
@@ -768,6 +756,16 @@
         }
       });
 
+      const addBottom = document.createElement("div");
+      addBottom.className = "addItemBottom";
+      addBottom.innerHTML = "<button class='addPointBtn'>+ Pievienot punktu</button>";
+      addBottom.querySelector("button").addEventListener("click", function () {
+        section.items.push(item("Jauns punkts", true));
+        saveData();
+        render();
+      });
+      sectionEl.appendChild(addBottom);
+
       list.appendChild(sectionEl);
     });
 
@@ -799,6 +797,114 @@
     render();
   }
 
+  function bytesToBase64Url(bytes) {
+    let binary = "";
+    bytes.forEach(function (b) { binary += String.fromCharCode(b); });
+    return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+  }
+
+  function base64UrlToBytes(base64url) {
+    let base64 = base64url.replaceAll("-", "+").replaceAll("_", "/");
+    while (base64.length % 4) base64 += "=";
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    return bytes;
+  }
+
+  function encodePayload(obj) {
+    const json = JSON.stringify(obj);
+    const bytes = new TextEncoder().encode(json);
+    return bytesToBase64Url(bytes);
+  }
+
+  function decodePayload(text) {
+    const bytes = base64UrlToBytes(text);
+    const json = new TextDecoder().decode(bytes);
+    return JSON.parse(json);
+  }
+
+  function sanitizeImportedData(payload) {
+    const arr = Array.isArray(payload) ? payload : payload.data;
+    if (!Array.isArray(arr) || arr.length === 0) throw new Error("Bad checklist data");
+
+    return arr.map(function (section) {
+      return {
+        id: makeId(),
+        title: String(section.title || "Bez nosaukuma"),
+        items: Array.isArray(section.items) ? section.items.map(function (it) {
+          return item(String(it.text || "Bez teksta"), !!it.required);
+        }) : []
+      };
+    });
+  }
+
+  function buildShareUrl() {
+    const cleanData = data.map(function (section) {
+      return {
+        title: section.title || "Bez nosaukuma",
+        items: section.items.map(function (it) {
+          return { text: it.text || "Bez teksta", required: !!it.required };
+        })
+      };
+    });
+
+    const payload = { version: 1, app: "VeloChecklist", data: cleanData };
+    const encoded = encodePayload(payload);
+    return window.location.href.split("#")[0] + "#share=" + encoded;
+  }
+
+  async function shareChecklist() {
+    const url = buildShareUrl();
+    const title = "Velo sacensību checklists";
+    const text = "Atver šo linku, lai importētu manu velo sacensību checklistu.";
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: title, text: text, url: url });
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url);
+        alert("Koplietošanas links nokopēts.");
+      } else {
+        prompt("Nokopē šo linku:", url);
+      }
+    } catch (e) {
+      try {
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(url);
+          alert("Koplietošanas links nokopēts.");
+          return;
+        }
+      } catch (copyError) {}
+      prompt("Nokopē šo linku:", url);
+    }
+  }
+
+  function handleSharedLink() {
+    if (!window.location.hash || !window.location.hash.startsWith("#share=")) return;
+
+    try {
+      const encoded = window.location.hash.slice("#share=".length);
+      const payload = decodePayload(encoded);
+      const imported = sanitizeImportedData(payload);
+
+      const ok = confirm("Šajā linkā ir koplietots checklists. Importēt to šajā telefonā? Esošais šajā telefonā saglabātais saraksts tiks aizstāts.");
+      if (ok) {
+        data = imported;
+        localStorage.setItem(dataKey, JSON.stringify(data));
+        localStorage.removeItem(notesKey);
+        alert("Checklists importēts. Tagad tas saglabāsies šajā telefonā.");
+      }
+
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    } catch (e) {
+      alert("Neizdevās importēt koplietoto checklistu.");
+      history.replaceState(null, "", window.location.pathname + window.location.search);
+    }
+  }
+
+  handleSharedLink();
+
   notes.value = localStorage.getItem(notesKey) || "";
   notes.addEventListener("input", saveData);
 
@@ -812,7 +918,11 @@
 
   document.getElementById("clearAll").addEventListener("click", clearAllChecks);
   document.getElementById("requiredOnly").addEventListener("click", checkRequiredOnly);
-  editBtn.addEventListener("click", function () { setEditing(!editing); });
+  document.getElementById("shareChecklist").addEventListener("click", shareChecklist);
+
+  settingsBtn.addEventListener("click", function () {
+    setEditing(!editing);
+  });
 
   document.getElementById("addSection").addEventListener("click", function () {
     const input = document.getElementById("newSectionTitle");
@@ -831,7 +941,7 @@
     document.getElementById("newSectionTitle").value = "";
   });
 
-  resetDefaultBtn.addEventListener("click", function () {
+  document.getElementById("resetDefault").addEventListener("click", function () {
     if (confirm("Atjaunot sākuma sarakstu? Tavas izmaiņas tiks dzēstas.")) {
       data = cloneDefaultData();
       notes.value = "";
