@@ -21,6 +21,8 @@
       --yellowText: #92400e;
       --softBlue: #dbeafe;
       --softGray: #f3f4f6;
+      --softRed: #fee2e2;
+      --softGreen: #dcfce7;
     }
 
     * { box-sizing: border-box; }
@@ -132,6 +134,16 @@
       transition: width .15s ease;
     }
 
+    .requiredLine {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .requiredLine.bad { color: var(--red); }
+    .requiredLine.good { color: var(--green); }
+
     .buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -153,6 +165,11 @@
       touch-action: manipulation;
     }
 
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
     button.secondary {
       background: #e5e7eb;
       color: var(--text);
@@ -161,11 +178,6 @@
     button.green { background: var(--green); }
     button.danger { background: var(--red); }
     button.full { grid-column: span 2; }
-
-    button:disabled {
-      opacity: .45;
-      cursor: not-allowed;
-    }
 
     button.small {
       min-height: 38px;
@@ -314,6 +326,10 @@
       margin-top: 10px;
     }
 
+    .editActions .deleteSectionBtn {
+      grid-column: span 2;
+    }
+
     .editItem {
       display: grid;
       gap: 8px;
@@ -373,6 +389,61 @@
 
     body.editing .addSectionBox { display: block; }
 
+    .summary {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 12px;
+      box-shadow: 0 4px 16px rgba(0,0,0,.04);
+    }
+
+    .summary h2 {
+      margin: 0 0 10px;
+      font-size: 19px;
+    }
+
+    .summary.ok {
+      border-color: #86efac;
+      background: var(--softGreen);
+    }
+
+    .summary.bad {
+      border-color: #fecaca;
+      background: #fff;
+    }
+
+    .summaryOkText {
+      color: var(--green);
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .missingGroup {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--softRed);
+      border: 1px solid #fecaca;
+    }
+
+    .missingGroupTitle {
+      font-weight: 950;
+      margin-bottom: 8px;
+      color: #991b1b;
+    }
+
+    .missingList {
+      margin: 0;
+      padding-left: 20px;
+      color: #7f1d1d;
+      font-weight: 750;
+    }
+
+    .missingList li {
+      margin: 5px 0;
+    }
+
     .notes {
       background: var(--card);
       border: 1px solid var(--line);
@@ -412,6 +483,7 @@
       .buttons { grid-template-columns: 1fr; }
       button.full { grid-column: auto; }
       .editActions, .editItemActions { grid-template-columns: 1fr; }
+      .editActions .deleteSectionBtn { grid-column: auto; }
     }
   </style>
 </head>
@@ -433,11 +505,10 @@
           </div>
           <div id="progressText" class="progressText">0/0</div>
         </div>
+        <div id="requiredLine" class="requiredLine normalOnly">Obligātie: 0/0</div>
 
         <div class="buttons normalOnly">
-          <button id="newCheck">Jauna pārbaude</button>
-          <button id="requiredOnly" class="secondary">Atzīmēt obligāto</button>
-          <button id="clearAll" class="danger full">Noņemt visus ķekšus</button>
+          <button id="newCheck" class="full">Sākt jaunu pārbaudi</button>
         </div>
 
         <div class="editNotice">
@@ -462,12 +533,17 @@
       </div>
     </section>
 
+    <section class="summary bad" id="requiredSummary">
+      <h2>❗ Neizpildītie obligātie punkti</h2>
+      <div id="requiredSummaryContent"></div>
+    </section>
+
     <section class="notes">
       <h2>📝 Piezīmes konkrētajām sacensībām</h2>
       <textarea id="notes" placeholder="Piemēram: starts 10:00, numurs jāizņem līdz 9:15, trase slapja, jāņem dubļu riepas..."></textarea>
     </section>
 
-    <p class="footerNote">Versija: reorder / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
+    <p class="footerNote">Versija: single-start-button / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
   </div>
 
 <script>
@@ -494,9 +570,9 @@
         item("Brilles", true),
         item("Lietus jaka / vēja veste", false),
         item("Siltā apakškārta", false),
-        item("Pārģērbšanās drēbes pēc finiša", true),
         item("Dvielis", false),
-        item("Maisiņš slapjām vai netīrām drēbēm", false)
+        item("Maisiņš slapjām vai netīrām drēbēm", false),
+        item("Pulsometrs", true)
       ]
     },
     {
@@ -522,14 +598,7 @@
         item("Rezerves baterija pārslēdzējam, ja ir elektroniskais pārslēdzējs", false),
         item("Velo dators uzlādēts", true),
         item("Velo datora stiprinājums pārbaudīts", true),
-        item("Pulsa josta / sensori, ja lieto", false),
-        item("Riepu spiediens pārbaudīts", true),
-        item("Bremzes pārbaudītas", true),
-        item("Ātrumi pārbaudīti", true),
-        item("Ķēde saeļļota", true),
-        item("Pudeles turētāji pieskrūvēti", true),
-        item("Starta numurs / čips piestiprināts", true),
-        item("Lampiņa, ja vajadzīga", false)
+        item("Starta numurs / čips piestiprināts", true)
       ]
     },
     {
@@ -540,42 +609,29 @@
         item("Montāžas lāpstiņas", true),
         item("Pumpis vai CO₂ baloniņš", true),
         item("Multitūlis", true),
-        item("Ātrais ķēdes savienojums", false),
         item("Tubeless dakts / remonta komplekts", false),
-        item("Rezerves ventiļa serde", false),
         item("Savilcēji", false),
         item("Izolācijas lenta", false),
-        item("Maza lupatiņa", false)
+        item("Maza lupatiņa", false),
+        item("Šķēres", true),
+        item("Dinamo", true),
+        item("Riepu spiediena mērītājs", true),
+        item("Mitrās salvetes", true),
+        item("Karcher", false)
       ]
     },
     {
       id: makeId(),
       title: "Dokumenti un organizācija",
       items: [
-        item("Telefons", true),
-        item("Maks / bankas karte / skaidra nauda", true),
-        item("Personu apliecinošs dokuments", true),
+        item("Telefons", false),
+        item("Maks / bankas karte / skaidra nauda", false),
+        item("Personu apliecinošs dokuments", false),
         item("Licence, ja vajadzīga", false),
         item("Reģistrācijas apstiprinājums / QR kods", true),
-        item("Auto atslēgas", true),
+        item("Auto atslēgas", false),
         item("Navigācija līdz starta vietai pārbaudīta", true),
         item("Starta laiks un numura izņemšanas laiks pārbaudīts", true)
-      ]
-    },
-    {
-      id: makeId(),
-      title: "Pirms izbraukšanas no mājām",
-      items: [
-        item("Velo ielikts auto vai uz turētāja", true),
-        item("Priekšējais rats, ja ņemts nost", true),
-        item("Ass / ekscentrs paņemts", true),
-        item("Velo apavi nav palikuši mājās", true),
-        item("Ķivere nav palikusi mājās", true),
-        item("Pudeles piepildītas", true),
-        item("Velo dators ir uz velo vai somā", true),
-        item("Pārslēdzēja baterija nav palikusi lādētājā", true),
-        item("Telefons uzlādēts", true),
-        item("Laika prognoze pārbaudīta", true)
       ]
     }
   ];
@@ -590,6 +646,9 @@
   const list = document.getElementById("list");
   const progressText = document.getElementById("progressText");
   const progressInner = document.getElementById("progressInner");
+  const requiredLine = document.getElementById("requiredLine");
+  const requiredSummary = document.getElementById("requiredSummary");
+  const requiredSummaryContent = document.getElementById("requiredSummaryContent");
   const notes = document.getElementById("notes");
   const settingsBtn = document.getElementById("settingsBtn");
   const editTopButtons = document.getElementById("editTopButtons");
@@ -625,6 +684,7 @@
     localStorage.setItem(notesKey, notes.value || "");
     localStorage.setItem(editKey, editing ? "1" : "0");
     updateProgress();
+    updateRequiredSummary();
   }
 
   function escapeHtml(text) {
@@ -823,6 +883,41 @@
     });
 
     updateProgress();
+    updateRequiredSummary();
+  }
+
+  function getRequiredStats() {
+    const groups = [];
+    let requiredTotal = 0;
+    let requiredDone = 0;
+
+    data.forEach(section => {
+      const missing = [];
+      section.items.forEach(it => {
+        if (it.required) {
+          requiredTotal++;
+          if (it.checked) {
+            requiredDone++;
+          } else {
+            missing.push(it.text || "Bez teksta");
+          }
+        }
+      });
+
+      if (missing.length) {
+        groups.push({
+          title: section.title || "Bez nosaukuma",
+          items: missing
+        });
+      }
+    });
+
+    return {
+      requiredTotal,
+      requiredDone,
+      requiredMissing: requiredTotal - requiredDone,
+      groups
+    };
   }
 
   function updateProgress() {
@@ -832,6 +927,39 @@
     const pct = total ? Math.round(done / total * 100) : 0;
     progressText.textContent = done + "/" + total;
     progressInner.style.width = pct + "%";
+
+    const stats = getRequiredStats();
+    requiredLine.textContent = "Obligātie: " + stats.requiredDone + "/" + stats.requiredTotal;
+    requiredLine.classList.toggle("bad", stats.requiredMissing > 0);
+    requiredLine.classList.toggle("good", stats.requiredTotal > 0 && stats.requiredMissing === 0);
+  }
+
+  function updateRequiredSummary() {
+    const stats = getRequiredStats();
+
+    requiredSummary.classList.toggle("ok", stats.requiredMissing === 0);
+    requiredSummary.classList.toggle("bad", stats.requiredMissing > 0);
+
+    if (stats.requiredMissing === 0) {
+      requiredSummaryContent.innerHTML = "<div class='summaryOkText'>✅ Viss obligātais ir izpildīts.</div>";
+      return;
+    }
+
+    let html = "<div style='font-weight:900;color:#991b1b;margin-bottom:8px;'>Nav izpildīti " +
+      stats.requiredMissing + " obligātie punkti no " + stats.requiredTotal + ".</div>";
+
+    stats.groups.forEach(group => {
+      html += "<div class='missingGroup'>";
+      html += "<div class='missingGroupTitle'>" + escapeHtml(group.title) + "</div>";
+      html += "<ul class='missingList'>";
+      group.items.forEach(text => {
+        html += "<li>" + escapeHtml(text) + "</li>";
+      });
+      html += "</ul>";
+      html += "</div>";
+    });
+
+    requiredSummaryContent.innerHTML = html;
   }
 
   function clearAllChecks() {
@@ -969,8 +1097,6 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 
-  document.getElementById("clearAll").addEventListener("click", clearAllChecks);
-  document.getElementById("requiredOnly").addEventListener("click", checkRequiredOnly);
   document.getElementById("shareChecklist").addEventListener("click", shareChecklist);
 
   settingsBtn.addEventListener("click", function () {
