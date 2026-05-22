@@ -162,6 +162,11 @@
     button.danger { background: var(--red); }
     button.full { grid-column: span 2; }
 
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
     button.small {
       min-height: 38px;
       padding: 8px 10px;
@@ -462,7 +467,7 @@
       <textarea id="notes" placeholder="Piemēram: starts 10:00, numurs jāizņem līdz 9:15, trase slapja, jāņem dubļu riepas..."></textarea>
     </section>
 
-    <p class="footerNote">Versija: settings-edit / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
+    <p class="footerNote">Versija: reorder / 2026-05-22. Viss ir vienā HTML failā, bez interneta un bez ārējām bibliotēkām.</p>
   </div>
 
 <script>
@@ -668,6 +673,8 @@
         "<label class='fieldLabel'>Kategorijas nosaukums</label>" +
         "<input class='input sectionTitleInput' value='" + escapeHtml(section.title || "") + "' placeholder='Kategorijas nosaukums'>" +
         "<div class='editActions'>" +
+          "<button class='secondary small moveSectionUpBtn'>↑ Augšup</button>" +
+          "<button class='secondary small moveSectionDownBtn'>↓ Lejup</button>" +
           "<button class='danger small deleteSectionBtn'>Dzēst kategoriju</button>" +
         "</div>";
       sectionEl.appendChild(editBlock);
@@ -675,6 +682,28 @@
       editBlock.querySelector(".sectionTitleInput").addEventListener("input", function (e) {
         section.title = e.target.value;
         saveData();
+      });
+
+      const moveSectionUpBtn = editBlock.querySelector(".moveSectionUpBtn");
+      const moveSectionDownBtn = editBlock.querySelector(".moveSectionDownBtn");
+
+      moveSectionUpBtn.disabled = sectionIndex === 0;
+      moveSectionDownBtn.disabled = sectionIndex === data.length - 1;
+
+      moveSectionUpBtn.addEventListener("click", function () {
+        if (sectionIndex === 0) return;
+        const moved = data.splice(sectionIndex, 1)[0];
+        data.splice(sectionIndex - 1, 0, moved);
+        saveData();
+        render();
+      });
+
+      moveSectionDownBtn.addEventListener("click", function () {
+        if (sectionIndex === data.length - 1) return;
+        const moved = data.splice(sectionIndex, 1)[0];
+        data.splice(sectionIndex + 1, 0, moved);
+        saveData();
+        render();
       });
 
       editBlock.querySelector(".deleteSectionBtn").addEventListener("click", function () {
@@ -730,6 +759,8 @@
               "<input class='input itemTextInput' value='" + escapeHtml(it.text || "") + "' placeholder='Piemēram: Ķivere'>" +
             "</div>" +
             "<div class='editItemActions'>" +
+              "<button class='small secondary moveItemUpBtn'>↑ Augšup</button>" +
+              "<button class='small secondary moveItemDownBtn'>↓ Lejup</button>" +
               "<button class='small reqToggle " + (it.required ? "required" : "") + "'>" + (it.required ? "Obligāti" : "Pēc vajadzības") + "</button>" +
               "<button class='small danger deleteItemBtn'>Dzēst</button>" +
             "</div>";
@@ -738,6 +769,28 @@
           editItem.querySelector(".itemTextInput").addEventListener("input", function (e) {
             it.text = e.target.value;
             saveData();
+          });
+
+          const moveItemUpBtn = editItem.querySelector(".moveItemUpBtn");
+          const moveItemDownBtn = editItem.querySelector(".moveItemDownBtn");
+
+          moveItemUpBtn.disabled = itemIndex === 0;
+          moveItemDownBtn.disabled = itemIndex === section.items.length - 1;
+
+          moveItemUpBtn.addEventListener("click", function () {
+            if (itemIndex === 0) return;
+            const moved = section.items.splice(itemIndex, 1)[0];
+            section.items.splice(itemIndex - 1, 0, moved);
+            saveData();
+            render();
+          });
+
+          moveItemDownBtn.addEventListener("click", function () {
+            if (itemIndex === section.items.length - 1) return;
+            const moved = section.items.splice(itemIndex, 1)[0];
+            section.items.splice(itemIndex + 1, 0, moved);
+            saveData();
+            render();
           });
 
           editItem.querySelector(".reqToggle").addEventListener("click", function (e) {
